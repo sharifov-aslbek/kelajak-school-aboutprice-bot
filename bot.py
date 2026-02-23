@@ -7,6 +7,7 @@ from telegram import (
     ReplyKeyboardMarkup,
     ReplyKeyboardRemove,
     BotCommand,
+    WebAppInfo
 )
 from telegram.ext import (
     ApplicationBuilder,
@@ -14,19 +15,15 @@ from telegram.ext import (
     CallbackQueryHandler,
     MessageHandler,
     ContextTypes,
-    filters,
-    ApplicationBuilder
+    filters
 )
-from telegram import WebAppInfo
-from apscheduler.schedulers.asyncio import AsyncIOScheduler
-
 
 TOKEN = os.getenv("TOKEN") or "8037476033:AAFWi8Kbv7x0nHLhufLRwNRyYicrOm9DsN8"
 
 if not TOKEN:
     raise ValueError("❌ TOKEN belgilanmagan. Iltimos, TOKEN ni kiriting.")
 
-# Tugmalar matni
+# ================= BUTTONS DATA =================
 BUTTONS = {
     "🎓 Maktabimiz qulayliklari": """
 🟢 1-sinfdan 11-sinfgacha rus va uzbek ta'lim tillarida qabul qilamiz
@@ -119,6 +116,8 @@ Maktabimiz transporti shahar bo'ylab farzandingizni uydan dars mashg'ulotlariga 
 """,
 }
 
+# ================= HANDLERS =================
+
 # /start komandasi
 async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
     await context.bot.set_my_commands([
@@ -139,8 +138,6 @@ async def menu_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
     await send_main_menu(update, context)
 
 # Asosiy menyuni yuborish
-# Asosiy menyuni yuborish
-# Asosiy menyuni yuborish
 async def send_main_menu(update: Update, context: ContextTypes.DEFAULT_TYPE):
     keyboard = [[InlineKeyboardButton(k, callback_data=k)] for k in BUTTONS]
 
@@ -153,12 +150,16 @@ async def send_main_menu(update: Update, context: ContextTypes.DEFAULT_TYPE):
             "🌐 Maktab saytiga o'tish",
             web_app=WebAppInfo(url="https://kelajakschoolqarshi.uz/")
         )
-    ])  # Web App sifatida ochiladi
+    ])
 
-    await update.message.reply_text(
-        "📋 Xizmatlar menyusi:", reply_markup=InlineKeyboardMarkup(keyboard)
-    )
+    # InlineKeyboardButton ro'yxatini to'g'ri shakllantirish
+    reply_markup = InlineKeyboardMarkup(keyboard)
 
+    # `update` turi Message yoki CallbackQuery ekanligini tekshiramiz
+    if update.message:
+        await update.message.reply_text("📋 Xizmatlar menyusi:", reply_markup=reply_markup)
+    elif update.callback_query:
+        await update.callback_query.edit_message_text("📋 Xizmatlar menyusi:", reply_markup=reply_markup)
 
 # Tugma bosilganda
 async def button_handler(update: Update, context: ContextTypes.DEFAULT_TYPE):
@@ -166,7 +167,7 @@ async def button_handler(update: Update, context: ContextTypes.DEFAULT_TYPE):
     await query.answer()
 
     if query.data == "back_to_menu":
-        await send_main_menu(query, context)
+        await send_main_menu(update, context)
         return
 
     if query.data == "download_contract":
@@ -210,19 +211,9 @@ async def contact_handler(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
         await send_main_menu(update, context)
 
-# 🔄 30 daqiqada yuboriladigan task (hozircha to‘ldirilmagan)
-async def send_scheduled_message(app):
-    chat_id = -1002581311585
-    await app.bot.send_message(chat_id=chat_id, text="✅  test har 30daqiqada")
-
-async def on_startup(app: ApplicationBuilder):
-    scheduler = AsyncIOScheduler()
-    scheduler.add_job(send_scheduled_message, "interval", minutes=30, args=[app])
-    scheduler.start()
-    print("Scheduler ishga tushdi.")
-
+# ================= MAIN =================
 if __name__ == "__main__":
-    app = ApplicationBuilder().token(TOKEN).post_init(on_startup).build()
+    app = ApplicationBuilder().token(TOKEN).build()
 
     app.add_handler(CommandHandler("start", start))
     app.add_handler(CommandHandler("menu", menu_command))
