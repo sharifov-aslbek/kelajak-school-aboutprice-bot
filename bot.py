@@ -52,13 +52,16 @@ Boshlang'ich sinf rahbari Matematika, o'qish, ona tili, tabiiy fanlardan ta'lim 
 
 📢 Chegirmalar:
 
-👨‍👩‍👧‍👦 Bir oiladan 2 ta farzand kelsa, har bir o‘quvchi uchun - 5% dan chegirma
-⏳ Oylik to‘lovni har oyning 10-sanasigacha qilsangiz, yana - 5% chegirma
-💳 Yarim yillik to‘lov bir martada to‘lansa - 7% chegirma
-🏷️ Bir yillik to‘lov bir martada to‘lansa - 10% chegirma
+Bir oiladan 2ta farzand kelsa 2-farzand uchun har oylik 30%lik chegirma, 3 nafar kelsa 3-farzandga 40%, 4- farzandga 50% chegirma qilib beriladi 
+
+Oylik toʻlovni har oyning 10-sanasigacha qilsangiz yana 100 000ming soʻm chegirma boʻladi 
+
+Yarim yillik toʻlov bir martada toʻlov qilinsa 10% 
+
+Yillik toʻlov bir martada qilinsa 20% chegirma
 """,
     "🎓 Maktabga tayyorlov narxi": """
-1 350 000 so'm
+1 880 000 so'm
 
 ✅ Har bir o‘quvchi bilan individual shug‘ullanish
 ✅ Sinflarda 10–15 nafar o‘quvchi
